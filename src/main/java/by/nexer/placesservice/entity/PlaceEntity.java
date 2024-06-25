@@ -1,5 +1,6 @@
 package by.nexer.placesservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class PlaceEntity {
     @ManyToOne
     @JoinColumn(name = "trip_id")
     private TripEntity trip;
+
+//    @Transient
+//    private Long tripId = 0L;
 
     @Column(name = "title")
     private String title;

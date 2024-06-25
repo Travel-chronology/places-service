@@ -1,18 +1,22 @@
 package by.nexer.placesservice.service;
 
 import by.nexer.placesservice.entity.PlaceEntity;
+import by.nexer.placesservice.entity.TripEntity;
 import by.nexer.placesservice.repository.PlaceRepository;
+import by.nexer.placesservice.repository.TripRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PlaceService {
     private final PlaceRepository placeRepository;
+    private final TripRepository tripRepository;
 
     public List<PlaceEntity> getAll() {
         return placeRepository.findAll();
@@ -23,16 +27,21 @@ public class PlaceService {
                 .orElseThrow(() -> new RuntimeException("Place not found for id: " + id));
     }
 
-    public String getImagesForPlace(Long id){
+    public String getImagesForPlace(Long id) {
         PlaceEntity placeEntity = placeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Place not found for id: " + id));
         return placeEntity.getPhotoUrl();
     }
+
     public PlaceEntity createPlace(PlaceEntity entity) {
         return placeRepository.save(entity);
     }
 
     public PlaceEntity updatePlace(PlaceEntity entity) {
+        Long id = entity.getTrip().getId();
+        TripEntity tripEntity = tripRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trip not found for id: " + id));
+        entity.setTrip(tripEntity);
         return placeRepository.save(entity);
     }
 
